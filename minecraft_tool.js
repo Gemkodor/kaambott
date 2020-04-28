@@ -98,6 +98,27 @@ class MinecraftTool {
             }
         }
     }
+
+    async deleteCoords(message, args) {
+        if (args.length < 1) {
+            return message.reply('Le nombre de paramètres est incorrect');
+        } else {
+            const label = args[0];
+            const rowCount = await this.Coordinates.destroy({
+                where: {
+                    [Op.and]: [
+                        { label: label },
+                        { player: message.author.username }
+                    ]
+                }
+            });
+
+            if (!rowCount) {
+                return message.reply('Ces coordonnées n\'existent pas. Destruction annulée');
+            } 
+            return message.reply('Les coordonnées ont été effacées.');
+        }
+    }
 }
 
 module.exports = MinecraftTool;
