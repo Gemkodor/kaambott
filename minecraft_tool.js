@@ -125,6 +125,21 @@ class MinecraftTool {
         }
     }
 
+    /**
+     * Set a timer for a number of minutes passed in parameters and display a message at the end
+     * @param {*} message 
+     * @param {*} args 
+     */
+    timer(message, args) {
+        let durationInMinutes = args[0];
+        let durationInSeconds = durationInMinutes * 60;
+
+        message.reply("Le timer est déclenché pour " + durationInMinutes + " minutes !");
+        setTimeout(() => {
+            message.reply(durationInMinutes + " minutes se sont écoulés ! Réveille toi !");
+        }, durationInSeconds * 1000);
+    }
+
     isMissingMandatoryKeywords(msgContent) {
         let missingMandatoryKeywords = false;
 

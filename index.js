@@ -39,7 +39,12 @@ client.on('message', async message => {
                 minecraftTool.getCoords(message, args);
                 break;
             case "delete-coords":
+                // Syntax of command : !delete-coords <String:Label>
                 minecraftTool.deleteCoords(message, args);
+                break;
+            case "timer":
+                // Syntax of command : !timer <Number:Minutes>
+                minecraftTool.timer(message, args);
                 break;
             case "help":
                 let helpText = "Commandes disponibles :\n!save-coords <Label> <X> <Y> <Z> :\n!get-coords <Label>\n";
