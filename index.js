@@ -21,7 +21,8 @@ client.on('message', async message => {
 
     if (!message.content.startsWith(prefix)) {
         kaamelottReact.react(message);
-        minecraftTool.tryStructureSentenceToCommand(message);
+        minecraftTool.tryStructureSentenceToSaveCoords(message);
+        minecraftTool.tryStructureSentenceToGetCoords(message);
     } else {
         // Handles commands (Ex : !help)
         switch (command) {
