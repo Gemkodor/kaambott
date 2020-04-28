@@ -21,6 +21,7 @@ client.on('message', async message => {
 
     if (!message.content.startsWith(prefix)) {
         kaamelottReact.react(message);
+        minecraftTool.tryStructureSentenceToCommand(message);
     } else {
         // Handles commands (Ex : !help)
         switch (command) {

@@ -92,13 +92,18 @@ class MinecraftTool {
 
             if (listOfCoords.length > 0) {
                 const listOfCoordsString = listOfCoords.map(coords => coords.label + " => [ " + coords.x + ", " + coords.y + ", " + coords.z + "]").join('\n') 
-                return message.reply(listOfCoordsString);
+                return message.reply("Voici les coordonnées :\n" + listOfCoordsString);
             } else {
                 return message.reply('Les coordonnées n\'ont pas été trouvées');
             }
         }
     }
 
+    /**
+     * Delete a set of coordinates by label (deletes only coordinates from user that typed the command)
+     * @param {*} message 
+     * @param {*} args 
+     */
     async deleteCoords(message, args) {
         if (args.length < 1) {
             return message.reply('Le nombre de paramètres est incorrect');
@@ -117,6 +122,42 @@ class MinecraftTool {
                 return message.reply('Ces coordonnées n\'existent pas. Destruction annulée');
             } 
             return message.reply('Les coordonnées ont été effacées.');
+        }
+    }
+
+    isMissingMandatoryKeywords(msgContent) {
+        let missingMandatoryKeywords = false;
+
+        // Check mandatory keywords before to go further
+        let mandatoryKeywords = ['kaambott'];
+        mandatoryKeywords.forEach(keyword => {
+            if (msgContent.indexOf(keyword.toLowerCase()) === -1) {
+                missingMandatoryKeywords = true;
+            }
+        });
+
+        return missingMandatoryKeywords;
+    }
+
+    tryStructureSentenceToCommand(message) {
+        let msgContent = message.content.toLowerCase();
+        if (this.isMissingMandatoryKeywords(msgContent)) {
+            return;
+        }
+
+        // Check keywords for specific command
+        let getCoordsKeywords = ['donne', 'coordonnées', 'coords'];
+        let nbKeywordsValidForGetCoords = 0;
+
+        getCoordsKeywords.forEach(keyword => {
+            if (msgContent.indexOf(keyword) !== -1) {
+                nbKeywordsValidForGetCoords++;
+            }
+        });
+
+        if (nbKeywordsValidForGetCoords >= getCoordsKeywords.length - 1) {
+            let args = message.content.split(' ').splice(-1);
+            this.getCoords(message, args);
         }
     }
 }
