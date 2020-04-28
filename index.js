@@ -24,20 +24,20 @@ client.on('message', async message => {
     } else {
         // Handles commands (Ex : !help)
         switch (command) {
+            case "seed":
+                let seeds = "Liste des seed Minecraft :\nAlex's Server : 603908464446605";
+                message.channel.send(seeds);
+                break;
             case "save-coords":
                 // Syntax of command : !save-coords <String:Label> <Number:X> <Number:Y> <Number:Z>
                 minecraftTool.saveCoords(message, args);
                 break;
             case "get-coords":
-                // Syntax of command : !get-coords <String:Label>
-                minecraftTool.getCoordsByName(message, args);
-                break;
-            case "get-coords-player":
-                // Syntax of command : !get-coords-player <String:PlayerName>
-                minecraftTool.getCoordsByPlayer(message, args);
+                // Syntax of command : !get-coords <String:Label|PlayerName>
+                minecraftTool.getCoords(message, args);
                 break;
             case "help":
-                let helpText = "Commandes disponibles :\n!save-coords <Label> <X> <Y> <Z> :\n!get-coords <Label>\n!get-coords-player <PlayerName>";
+                let helpText = "Commandes disponibles :\n!save-coords <Label> <X> <Y> <Z> :\n!get-coords <Label>\n";
                 message.channel.send(helpText);
                 break;
         }

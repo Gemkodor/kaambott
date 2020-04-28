@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 class MinecraftTool {
     constructor(dbManager) {
@@ -8,7 +9,10 @@ class MinecraftTool {
 
     createModels() {
         this.Coordinates = this.sequelize.define('minecraft_coordinates', {
-            label: Sequelize.STRING,
+            label: {
+                type: Sequelize.STRING,
+                unique: true
+            },
             player: Sequelize.STRING,
             x: {
                 type: Sequelize.INTEGER,
@@ -58,46 +62,40 @@ class MinecraftTool {
                 });
                 return message.reply(`Les coords ${coords.label} ont été ajoutés !`);
             } catch (e) {
+                if (e.name === "SequelizeUniqueConstraintError") {
+                    return message.reply('Ce nom existe déjà');
+                }
                 return message.reply('Une erreur est survenue lors de l\'ajout des coordonnées');
             }
         }
     }
 
     /**
-     * Method to get a set of coordinates by label
+     * Method to get a set of coordinates by label or by player name
      * Syntax of command : !get-coords <String:Label>
      * @param {*} message 
      * @param {*} args 
      */
-    async getCoordsByName(message, args) {
+    async getCoords(message, args) {
         if (args.length < 1) {
             return message.reply('Le nombre de paramètres est incorrect');
         } else {
-            const coordsLabel = args[0];
-            const coords = await this.Coordinates.findOne({ where: { label: coordsLabel } });
+            const labelOrPlayerName = args[0];
+            const listOfCoords = await this.Coordinates.findAll({ 
+                where: { 
+                    [Op.or]: [
+                        { label: labelOrPlayerName },
+                        { player: labelOrPlayerName }
+                    ]
+                } 
+            });
 
-            if (coords) {
-                return message.reply(coords.label + ' se trouve en : [' + coords.get('x') + ', ' + coords.get('y') + ', ' + coords.get('z') + ']');
+            if (listOfCoords.length > 0) {
+                const listOfCoordsString = listOfCoords.map(coords => coords.label + " => [ " + coords.x + ", " + coords.y + ", " + coords.z + "]").join('\n') 
+                return message.reply(listOfCoordsString);
             } else {
                 return message.reply('Les coordonnées n\'ont pas été trouvées');
             }
-        }
-    }
-
-    /**
-     * Method to get the list of coordinates for a specific player
-     * Syntax of command : !get-coords-player <String:PlayerName>
-     * @param {*} message 
-     * @param {*} args 
-     */
-    async getCoordsByPlayer(message, args) {
-        if (args.length < 1) {
-            return message.reply('Le nombre de paramètres est incorrect');
-        } else {
-            const playerName = args[0];
-            const listOfCoords = await this.Coordinates.findAll({ where: { player: playerName } });
-            const listOfCoordsString = listOfCoords.map(coords => coords.label + " => [ " + coords.x + ", " + coords.y + ", " + coords.z + "]").join('\n') || "Aucune coordonnées enregistrées";
-            return message.reply("Les coordonnées de " + playerName + " :\n" + listOfCoordsString);
         }
     }
 }
