@@ -23,10 +23,12 @@ KaamBott is a Discord bot that have several functionalities, with absolutely no 
 2. Type npm install inside the project directory.
 3. Create a script called config.json in the directory and add the following content in it :
 
->{
->    "prefix": "!",
->    "token": "YOUR-TOKEN-GOES-HERE"
->}
+```
+{
+    "prefix": "!",
+    "token": "YOUR-TOKEN-GOES-HERE"
+}
+```
 
 > Don't forget to replace YOUR-TOKEN-GOES-HERE by your token
 
@@ -34,16 +36,20 @@ KaamBott is a Discord bot that have several functionalities, with absolutely no 
 
 > node index.js
 
-### Commandes du bot
+### Bot commands
 
 > !save-coords <String:Label> <Number:X> <Number:Y> <Number:Z>
+
 Save coordinates (X, Y, Z) with a label.
 
 > !get-coords <String:Label|PlayerName>
+
 Display coordinates corresponding to the label passed in parameters, or display all the coordinates saved by the player name passed in parameters.
 
 > !delete-coords <String:Label>
+
 Delete the coordinates saved under the name passed in parameters.
 
 > !timer <Number:Minutes>
+
 Launch a timer for the number of minutes passed in parameters, and display a message in the channel at the end of this timer.
