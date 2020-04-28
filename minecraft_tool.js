@@ -139,13 +139,46 @@ class MinecraftTool {
         return missingMandatoryKeywords;
     }
 
-    tryStructureSentenceToCommand(message) {
+    tryStructureSentenceToSaveCoords(message) {
         let msgContent = message.content.toLowerCase();
         if (this.isMissingMandatoryKeywords(msgContent)) {
             return;
         }
 
-        // Check keywords for specific command
+        let saveCoordsKeywords = ['enregistre', 'enregistrer', 'coordonnées', 'coords'];
+        let nbKeywordsValidForSaveCoords = 0;
+
+        saveCoordsKeywords.forEach(keyword => {
+            if (msgContent.indexOf(keyword) !== -1) {
+                nbKeywordsValidForSaveCoords++;
+            }
+        });
+
+        if (nbKeywordsValidForSaveCoords >= saveCoordsKeywords.length - 1) {
+            let words = message.content.split(' ');
+            let label;
+            let coords = [];
+            words.forEach(word => {
+                if (!isNaN(word)) {
+                    coords.push(word);
+                } else if (word[0] === '(') {
+                    label = word.slice(1, word.length - 1);
+                }
+            });
+
+            let args = [label];
+            args = args.concat(coords);
+            
+            this.saveCoords(message, args);
+        }
+    }
+
+    tryStructureSentenceToGetCoords(message) {
+        let msgContent = message.content.toLowerCase();
+        if (this.isMissingMandatoryKeywords(msgContent)) {
+            return;
+        }
+
         let getCoordsKeywords = ['donne', 'coordonnées', 'coords'];
         let nbKeywordsValidForGetCoords = 0;
 
