@@ -208,7 +208,7 @@ class KaamelottReact {
         let userMsg = message.content;
         this.quotes.forEach(quote => {
             quote.keywords.forEach(keyword => {
-                if (userMsg.indexOf(keyword) !== -1) {
+                if (userMsg.indexOf(" " + keyword + " ") !== -1) {
                     let sentence = quote.sentence.replace("{pseudo}", message.author.username);
                     message.channel.send(sentence);
                 }
